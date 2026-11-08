@@ -1,0 +1,37 @@
+server:
+  # 端口由 server.config.json 经启动脚本注入（环境变量 SERVER_PORT），默认 8080
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: vaccine-backend
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接参数由 server.config.json 经启动脚本注入（MYSQL_HOST/MYSQL_PORT/MYSQL_DB），默认本机 3306
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:vaccine_db}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: Npo_3433900
+    hikari:
+      # 启动时即校验连接，数据源连不上则启动失败（验收：后端成功连上 vaccine_db）
+      initialization-fail-timeout: 10000
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
+
+# JWT 登录态配置
+jwt:
+  # HS256 签名密钥（>= 256 bit）
+  secret: VaccineManagementSystemJwtSecretKey2026_ChangeMeInProduction
+  # token 过期时间（毫秒），默认 24 小时
+  expiration-ms: 86400000
+
+# 业务预警常量（与需求文档 5.4 一致，改配置即可调阈值）
+vaccine:
+  near-expiry-days: 30          # 临期预警：距有效期 <= 30 天
+  low-stock-threshold: 10       # 低库存预警：合计 <= 10 支
+  cancel-deadline-hours: 24     # 取消预约截止：班次开始前 24 小时
+  alert-scan-cron: "0 0 2 * * *" # 库存预警扫描：每日 02:00（需求 S-01）

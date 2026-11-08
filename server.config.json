@@ -1,0 +1,15 @@
+{
+  "backend": {
+    "port": 8080,
+    "javaHome": "C:/Users/admin1/program/eclipse_temurin_jdk_25"
+  },
+  "frontend": {
+    "port": 5173,
+    "nodeHome": "C:/Program Files/nodejs"
+  },
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "name": "vaccine_db"
+  }
+}
